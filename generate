@@ -1,0 +1,11 @@
+#!/bin/sh
+
+UPDATE_SCRIPT=""
+
+echo "Select target:"
+select target in "OSX" "iOS"; do
+    case $target in
+        OSX ) UPDATE_SCRIPT="./update_osx.sh"; break;;
+        iOS ) UPDATE_SCRIPT="./update_ios.sh"; break;;
+    esac
+done
