@@ -1,0 +1,15 @@
+#!/bin/sh
+
+FROM_REVISION=$(git rev-parse HEAD)
+
+JENKINS_URL='https://jenkins-candy.int.midasplayer.com'
+JOB_NAME='~ccsm_generated_automerge_group_master'
+TOKEN='EnnfCwjuvsZ4TAmRtrVRhNaUVP3P'
+PARAMETERS="{\"parameter\": [{\"name\":\"FROM_REVISION\", \"value\":\"${FROM_REVISION}\"},{\"name\":\"TO_BRANCH\", \"value\":\"master\"}]}, {\"name\":\"PUSH_WHEN_FINISHED\", \"value\":\"false\"}]}"
+
+echo ${FROM_REVISION}
+echo ${PARAMETERS}
+
+curl -X POST ${JENKINS_URL}/job/${JOB_NAME}/build \
+  --data token=${TOKEN} \
+  --data-urlencode json="${PARAMETERS}"
