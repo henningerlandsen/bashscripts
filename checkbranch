@@ -1,0 +1,3 @@
+#!/bin/bash
+cppcheck --quiet --suppress=unusedFunction --suppress=passedByValue --suppress=noExplicitConstructor --enable=all -I candycrushsaga/include -I candycrushsaga/packages/ccsm_support/include $(git diff --name-only origin/master... | grep -e "\.h" -e "\.cpp")
+
