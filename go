@@ -3,13 +3,15 @@
 GO_SCRIPT=~/King/Source/candycrushsaga/go.sh
 OSX_CONFIG="build_configs/OSX-GooglePlay-Facebook-QA.json"
 IOS_CONFIG="build_configs/AppStore-Facebook-QA-debug.json"
-ANDROID_CONFIG="build_configs/GooglePlay-Facebook-QA-release.json"
-ANDROID_PACKAGE="projects/GooglePlay-Facebook-QA-release/android/bin/CandyCrushSaga-release-signed.apk"
+ANDROID_CONFIG="build_configs/GooglePlay-Facebook-QA-debug.json"
+ANDROID_PACKAGE="projects/GooglePlay-Facebook-QA-debug/android/bin/CandyCrushSaga-debug-signed.apk"
 ANDROID_BUNDLE_ID="com.king.candycrushsaga"
 
 function update {
-	echo "Updating using config file: $1"
-	${GO_SCRIPT} $1 update -c
+	CONFIG_FILE="$1"
+	shift
+	echo "Updating using config file: ${CONFIG_FILE}"
+	${GO_SCRIPT} ${CONFIG_FILE} update -c "$@"
 }
 
 function android {
@@ -29,6 +31,10 @@ function android {
 		make -j 4
 		popd
 		;;
+		r|resource)
+		echo "Updating resources"
+		${GO_SCRIPT} ${ANDROID_CONFIG} resources
+		;;
 	esac
 }
 
@@ -40,7 +46,12 @@ case $1 in
 	a|android)
 	android $2
 	;;
+	c|check)
+	tools/scripts/build.py --policies --targets ${OSX_CONFIG}
+	checkbranch
+	;;
 	*)
-	update ${OSX_CONFIG}
+	shift
+	update ${OSX_CONFIG} "$@"
 	;;
 esac
